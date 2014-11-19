@@ -67,42 +67,29 @@ class postgresql_replication (
 
     class { 'postgresql::server':
       listen_addresses => '*',
-      service_ensure   => $postgresql_bootstrapping_done,
-      service_enable   => $postgresql_bootstrapping_done,
     }
 
     $tempdir       = dirname($postgresql::server::datadir)
     $archive_path  = "${tempdir}/archive"
-    $recovery_conf = "${postgresql::server::datadir}/recovery.conf"
+    $recovery_conf = "${postgresql::server::confdir}/recovery.conf"
 
     file { $recovery_conf:
+      ensure => file,
       owner  => $postgresql::server::user,
       group  => $postgresql::server::group,
     }
 
-    if $postgresql_bootstrapping_done == 'false' {
-      file { 'postgresql_replication_setup':
-        path   => '/usr/local/bin/postgresql_replication_setup.sh',
-        source => 'puppet:///modules/postgresql_replication/postgresql_replication_setup.sh',
-        owner  => 0,
-        group  => 0,
-        mode   => '0755',
-      }
-
-      exec { 'bootstrap-postgresql-slave':
-        command => "/bin/su -c \"/usr/local/bin/postgresql_replication_setup.sh ${postgresql::server::user} ${postgresql::server::group} ${replication_master} ${postgresql::server::port} ${replication_user} ${replication_password} ${postgresql::server::datadir}\" ${postgresql::server::user}",
-        notify  => Exec['start-postgresql-slave'],
-      }
-
-      exec { 'start-postgresql-slave':
-        command     => '/sbin/service postgresql start',
-        refreshonly => true,
-      }
-
-      Class['postgresql_replication::slave_config'] -> File['postgresql_replication_setup'] -> Exec['bootstrap-postgresql-slave']
+    file { 'postgresql_replication_setup':
+      path   => '/usr/local/bin/postgresql_replication_setup.sh',
+      source => 'puppet:///modules/postgresql_replication/postgresql_replication_setup.sh',
+      owner  => 0,
+      group  => 0,
+      mode   => '0755',
     }
 
-    Class['postgresql::server'] -> File[$archive_path] -> File[$recovery_conf]
+    exec { 'bootstrap-postgresql-slave':
+      command => "/bin/su -c \"/usr/local/bin/postgresql_replication_setup.sh ${postgresql::server::user} ${postgresql::server::group} ${replication_master} ${postgresql::server::port} ${replication_user} ${replication_password} ${postgresql::server::datadir} ${postgresql::server::confdir}\" ${postgresql::server::user}",
+    }
 
     class { 'postgresql_replication::slave_config':
       recovery_conf        => $recovery_conf,
@@ -112,6 +99,8 @@ class postgresql_replication (
       replication_user     => $replication_user,
       replication_password => $replication_password,
     }
+
+    Class['postgresql::server::config'] -> File[$archive_path] -> File[$recovery_conf] -> Class['postgresql_replication::slave_config'] -> File['postgresql_replication_setup'] -> Exec['bootstrap-postgresql-slave'] -> Class['postgresql::server::service']
   }
 
   file { $archive_path:
