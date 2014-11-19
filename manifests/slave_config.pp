@@ -24,11 +24,6 @@ class postgresql_replication::slave_config (
     value  => "host=${replication_master} port=${replication_port} user=${replication_user} password=${replication_password}",
   }
 
-  postgresql::server::config_entry { 'trigger_file':
-    path   => $recovery_path,
-    value  => "${datadir}/trigger",
-  }
-
   postgresql::server::config_entry { 'restore_command':
     path   => $recovery_path,
     value  => "test -f %p && cp %p ${archive_path}/%f",
