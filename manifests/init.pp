@@ -5,6 +5,14 @@ class postgresql_replication (
   $replication_password = undef,
   $hba_allow_address    = undef,
 ) inherits role {
+  if $::osfamily != 'RedHat' or $::operatingsystemmajrelease != '7' {
+    warning("The module postgresql_replication has been tested on RHEL/CentOS 7, only. Expect problems.")
+  }
+
+  if $::osfamily == 'RedHat' and $::operatingsystemmajrelease < '7' {
+    fail("postgresql package is too old in RHEL/CentOS 6 and below.")
+  }
+
   validate_re($server_type, '^(master|slave)$', "${server_type} is not supported for server_type. Allowed values are 'master' and 'slave'.")
   validate_string($replication_user)
   validate_string($replication_password)
