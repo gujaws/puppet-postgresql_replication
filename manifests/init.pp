@@ -73,9 +73,9 @@ class postgresql_replication (
 
     $tempdir       = dirname($postgresql::server::datadir)
     $archive_path  = "${tempdir}/archive"
-    $recovery_path = "${postgresql::server::datadir}/recovery.conf"
+    $recovery_conf = "${postgresql::server::datadir}/recovery.conf"
 
-    file { $recovery_path:
+    file { $recovery_conf:
       owner  => $postgresql::server::user,
       group  => $postgresql::server::group,
     }
@@ -102,10 +102,10 @@ class postgresql_replication (
       Class['postgresql_replication::slave_config'] -> File['postgresql_replication_setup'] -> Exec['bootstrap-postgresql-slave']
     }
 
-    Class['postgresql::server'] -> File[$archive_path] -> File[$recovery_path]
+    Class['postgresql::server'] -> File[$archive_path] -> File[$recovery_conf]
 
     class { 'postgresql_replication::slave_config':
-      recovery_path        => $recovery_path,
+      recovery_conf        => $recovery_conf,
       archive_path         => $archive_path,
       replication_master   => $replication_master,
       replication_port     => $postgresql::server::port,
