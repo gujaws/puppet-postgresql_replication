@@ -79,7 +79,7 @@ class postgresql_replication (
 
     $tempdir       = dirname($postgresql::server::datadir)
     $archive_path  = "${tempdir}/archive"
-    $recovery_conf = "${postgresql::server::confdir}/recovery.conf"
+    $recovery_conf = "${postgresql::server::datadir}/recovery.conf"
 
     file { $recovery_conf:
       ensure => file,
