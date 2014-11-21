@@ -113,6 +113,7 @@ class postgresql_replication (
 
   file { $archive_path:
     ensure => directory,
+    mode   => 0700,
     owner  => $postgresql::server::user,
     group  => $postgresql::server::group,
   }
