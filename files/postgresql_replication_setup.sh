@@ -46,7 +46,7 @@ if [ ${master_reachable} -eq 0 ]; then
 fi
 
 mv ${DATA_DIR} ${DATA_DIR_BAK} && mkdir ${DATA_DIR} && chown ${USER}:${GROUP} ${DATA_DIR} && chmod 0700 ${DATA_DIR} && chcon --reference=${DATA_DIR_BAK} ${DATA_DIR}
-/usr/bin/pg_basebackup -h ${REPL_MASTER} -D ${DATA_DIR} -U ${REPL_USER} --no-password --xlog
+/usr/bin/pg_basebackup -h ${REPL_MASTER} -p ${REPL_PORT} -D ${DATA_DIR} -U ${REPL_USER} --no-password --xlog
 rm -f .pgpass
 
 cp -a ${DATA_DIR_BAK}/recovery.conf ${DATA_DIR}
