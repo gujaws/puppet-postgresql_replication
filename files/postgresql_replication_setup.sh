@@ -52,6 +52,7 @@ rm -f .pgpass
 cp -a ${DATA_DIR_BAK}/recovery.conf ${DATA_DIR}
 if [ "${CONF_DIR}" = "${DATA_DIR}" ]; then
 	cp -a ${DATA_DIR_BAK}/postgresql.conf ${DATA_DIR}
+	cp -a ${DATA_DIR_BAK}/pg_hba.conf ${DATA_DIR}
 fi
 if [ -f "${DATA_DIR_BAK}/server.crt" ]; then
 	cp -a ${DATA_DIR_BAK}/server.crt ${DATA_DIR}
