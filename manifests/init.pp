@@ -77,9 +77,10 @@ class postgresql_replication (
       listen_addresses => '*',
     }
 
-    $tempdir       = dirname($postgresql::server::datadir)
-    $archive_path  = "${tempdir}/archive"
-    $recovery_conf = "${postgresql::server::datadir}/recovery.conf"
+    $tempdir        = dirname($postgresql::server::datadir)
+    $archive_path   = "${tempdir}/archive"
+    $recovery_conf  = "${postgresql::server::datadir}/recovery.conf"
+    $bootstrap_done = "${tempdir}/bootstrap-done"
 
     file { $recovery_conf:
       ensure => file,
@@ -96,7 +97,8 @@ class postgresql_replication (
     }
 
     exec { 'bootstrap-postgresql-slave':
-      command => "/bin/su -c \"/usr/local/bin/postgresql_replication_setup.sh ${postgresql::server::user} ${postgresql::server::group} ${replication_master} ${postgresql::server::port} ${replication_user} ${replication_password} ${postgresql::server::datadir} ${postgresql::server::confdir}\" ${postgresql::server::user}",
+      command => "/bin/su -c \"/usr/local/bin/postgresql_replication_setup.sh ${postgresql::server::user} ${postgresql::server::group} ${replication_master} ${postgresql::server::port} ${replication_user} ${replication_password} ${postgresql::server::datadir} ${postgresql::server::confdir} ${bootstrap_done}\" ${postgresql::server::user}",
+      creates => $bootstrap_done,
     }
 
     class { 'postgresql_replication::slave_config':

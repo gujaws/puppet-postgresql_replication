@@ -2,12 +2,8 @@
 
 cd $HOME
 
-if [ -f bootstrapping-done ]; then
-	exit 0
-fi
-
-if [ $# -ne 8 ]; then
-	echo "Usage: $0 user group replication-master replication-port replication-user replication-password datadir confdir" 1>&2
+if [ $# -ne 9 ]; then
+	echo "Usage: $0 user group replication-master replication-port replication-user replication-password datadir confdir bootstrap-done-file" 1>&2
 	exit 64
 fi
 
@@ -19,8 +15,13 @@ REPL_USER=$5
 REPL_PASS=$6
 DATA_DIR=$7
 CONF_DIR=$8
+BOOTSTRAP_DONE=$9
 
 DATA_DIR_BAK=${DATA_DIR}.BAK
+
+if [ -f ${BOOTSTRAP_DONE} ]; then
+	exit 0
+fi
 
 echo "*:*:*:${REPL_USER}:${REPL_PASS}" > .pgpass
 chmod 0600 .pgpass
@@ -64,4 +65,4 @@ fi
 rm -f ${DATA_DIR}/pg_log/*
 rm -rf ${DATA_DIR_BAK}
 
-date > bootstrapping-done
+date > ${BOOTSTRAP_DONE}
