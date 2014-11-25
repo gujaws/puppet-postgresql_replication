@@ -3,6 +3,17 @@ puppet-postgresql_replication
 
 Setup master slave streaming replication with postgresql
 
+Setup
+-----
+
+The postgresql_replication module uses [puppetlabs/puppetlabs-postgresql](https://github.com/puppetlabs/puppetlabs-postgresql) to install and configure postgresql. To have a basic setup use for example:
+
+    mkdir -p puppet/modules
+    git submodule add https://github.com/puppetlabs/puppetlabs-postgresql.git puppet/modules/postgresql
+    git submodule add https://github.com/puppetlabs/puppetlabs-stdlib.git puppet/modules/stdlib
+    git submodule add https://github.com/puppetlabs/puppetlabs-concat.git puppet/modules/concat
+    git submodule add https://github.com/gujaws/puppet-postgresql_replication.git puppet/modules/postgresql_replication
+
 Quick usage
 -----------
 
