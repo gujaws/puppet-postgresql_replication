@@ -3,6 +3,15 @@ puppet-postgresql_replication
 
 Setup master slave streaming replication with postgresql
 
+Successfully tested on:
+
+* CentOS 7
+* Debian 7 Wheezy
+* Ubuntu 12.04
+* Ubuntu 14.04
+
+This module doesn't work on CentOS 6 since the included postgresql 8 doesn't support streaming replication.
+
 Setup
 -----
 
