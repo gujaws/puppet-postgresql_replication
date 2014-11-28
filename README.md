@@ -12,6 +12,8 @@ Successfully tested on:
 
 This module doesn't work on CentOS 6 since the included postgresql 8 doesn't support streaming replication.
 
+SLES 12 isn't supported by [puppetlabs/puppetlabs-postgresql](https://github.com/puppetlabs/puppetlabs-postgresql) properly. Thus it doesn't work with puppet-postgresql_relication either.
+
 Setup
 -----
 
