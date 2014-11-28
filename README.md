@@ -46,7 +46,7 @@ On postgresql slave(s):
       replication_password => 'secret_password',
     }
     
-The example given assumes the master is running on 192.168.1.1 and the slave is running on some ip address within 192.168.1.0/24.
+The example given assumes the master is running on 192.168.1.1 and the slave is running on some IP address within 192.168.1.0/24.
 
 Attributes
 ----------
@@ -62,14 +62,14 @@ Has to be set on master and slave(s) with the same value.
 ####`replication_password`
 Password of the postgresql user used for replication authentication.
 
-Has to be set on master and slave(s) with the same value.
+Must be set on master and slave(s) with the same value.
 
 ####`hba_allow_address`
-`address` of `pg_hba.conf` entry. Can be hostname, ip address, or network. See [manpage of `pg_hba.conf`](http://www.postgresql.org/docs/9.1/static/auth-pg-hba-conf.html) for details.
+`address` of `pg_hba.conf` entry. Can be hostname, IP address, or network. See [manpage of `pg_hba.conf`](http://www.postgresql.org/docs/9.1/static/auth-pg-hba-conf.html) for details.
 
 Has to be given on master.
 
 ####`replication_master`
-Hostname or ip address of postgresql master.
+Hostname or IP address of postgresql master.
 
 Specify on slave(s).
